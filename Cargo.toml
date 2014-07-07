@@ -1,0 +1,10 @@
+[package]
+name = "noise"
+version = "0.0.1"
+authors = [ "atheriel@gmail.com" ]
+
+[[lib]]
+name = "noise"
+
+[dependencies.cgmath]
+git = "https://github.com/bjz/cgmath-rs.git"
