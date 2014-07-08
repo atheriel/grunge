@@ -14,7 +14,7 @@ TEST_DIR            = $(LIB_DIR)/test
 EXAMPLE_DIR         = $(LIB_DIR)/examples
 
 DOC_DIR             = doc
-DOC_PARAMS          = -L $(DEPS_DIR) --html-in-header src/doc/mathjax.html
+DOC_PARAMS          = -L $(DEPS_DIR) --html-in-header src/docs/mathjax.html
 
 .PHONY: all lib test bench check doc clean help
 

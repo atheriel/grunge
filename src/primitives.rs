@@ -2,8 +2,7 @@
     This file is part of rs-noise, a procedural noise generation library.
 */
 
-use cgmath::vector::{Vector, Vector2, Vector3, dot};
-use utils::McEwanPermutable;
+use cgmath::vector::{Vector, Vector2, Vector3, Vector4, dot};
 
 /// The factor needed to skew x-y coordinates to coordinates on the grid of
 /// simplexes in two dimensions. Approximates $\frac{\sqrt{3} - 1}{2}$.
@@ -13,13 +12,25 @@ static HAIRY_2D: f32 = 0.366025403784439;
 /// coordinates in two dimensions. Approximates $\frac{3 - \sqrt{3}}{6}$.
 static SKEW_2D: f32 = 0.211324865405187;
 
-/// Simplex noise essentially works by overlaying the plane with a grid of
-/// equilateral triangles (which are 2-simplexes), finding which triangle the
-/// desired point is in, and interpolating from nearby gradients.
+/// Generate the coherent noise value for a point using the Simplex Noise
+/// method proposed by Ken Perlin.
+///
+/// Simplex noise in 2D essentially works by overlaying the plane with a grid of
+/// equilateral triangles (which are 2-simplexes) and pre-assigning a noise
+/// value to the verticies of these triangles. Then, we simply find which
+/// triangle the desired point is in, and interpolate from the verticies of that
+/// triangle to the point.
+///
+/// This implementation follows the GLSL code of McEwan et al. (2012), with some
+/// changes based on Stefan Gustavsson's Java code.
+///
+/// 1. McEwan et al. (2012).
+/// 2. Gustavsson (2010).
+/// 3. Ken Perlin
 pub fn snoise_2d(v: Vector2<f32>, seed: uint) -> f32 {
 	// First, determine which cell of N! = 2 simplexes we are in, and where
 	// in that cell we are.
-	// 
+	//
 	// 1. Skew the input vector from Euclidian space to where it would lie on
 	//    a grid of simplexes.
 	// 2. Take the integer part (i.e. floor) of the value to get the
@@ -42,7 +53,8 @@ pub fn snoise_2d(v: Vector2<f32>, seed: uint) -> f32 {
 	// point lies in is simply a matter of whether x > y or y > x. If the
 	// former, then the point is in the "lower" simplex, while in the latter
 	// case it is in the "upper" simplex.
-	let i1 = if x0.x > x0.y { Vector2::new(1.0, 0.0) } else { Vector2::new(0.0, 1.0) };
+	let i1: Vector2<f32> =
+		if x0.x > x0.y { Vector2::unit_x() } else { Vector2::unit_y() };
 
 	// And now we have the locations of the other two corners, which we
 	// convert back to unskewed coordinates.
@@ -67,8 +79,12 @@ pub fn snoise_2d(v: Vector2<f32>, seed: uint) -> f32 {
 		2.0 * (p.y * 0.024390243902439).fract() - 1.0,
 		2.0 * (p.z * 0.024390243902439).fract() - 1.0
 	);
-	let h2 = Vector3::new(h1.x.abs() - 0.5, h1.y.abs() - 0.5, h1.z.abs() - 0.5);
-	let h3 = Vector3::new((h1.x + 0.5).floor(), (h1.y + 0.5).floor(), (h1.z + 0.5).floor());
+	let h2 = Vector3::new(
+		h1.x.abs() - 0.5, h1.y.abs() - 0.5, h1.z.abs() - 0.5
+	);
+	let h3 = Vector3::new(
+		(h1.x + 0.5).floor(), (h1.y + 0.5).floor(), (h1.z + 0.5).floor()
+	);
 	let h4 = h1 - h3;
 
 	m = m * Vector3::new(
@@ -86,3 +102,31 @@ pub fn snoise_2d(v: Vector2<f32>, seed: uint) -> f32 {
 	// Scale the result to within about [-1, 1]
 	130.0 * dot(m, g)
 }
+
+/// For convenience, this trait is implemented by float-valued vectors in order
+/// to make it simple to compute pseudo-random gradient indicies. It follows
+/// the method laid out in McEwan et al. (2012).
+pub trait McEwanPermutable {
+	/// Hashes the vector using the permutaion polynomial given by McEwan et
+	/// al. (2012), i.e. `(34x^2 + x) mod 289`.
+	fn permutation_hash(&mut self) -> Self;
+}
+
+macro_rules! mcewan_permutable_float (
+	($T:ident <$S:ident>, $($field:ident),+ ) => (
+		impl McEwanPermutable for $T<$S> {
+			#[inline]
+			fn permutation_hash(&mut self) -> $T<$S> {
+				$T::new(
+					$(((self.$field * 34.0 + 1.0) * self.$field) % 289.0),+
+				)
+			}
+		}
+	)
+)
+
+// Generate implementations for vectors of floats (these will actually get
+// used in the library).
+mcewan_permutable_float!(Vector2<f32>, x, y)
+mcewan_permutable_float!(Vector3<f32>, x, y, z)
+mcewan_permutable_float!(Vector4<f32>, x, y, z, w)

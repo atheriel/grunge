@@ -5,7 +5,8 @@ extern crate cgmath;
 use std::io::{File, Truncate, Write};
 use cgmath::vector::Vector2;
 
-use noise::fractal::{PinkNoise, NoiseModule};
+use noise::common::NoiseModule;
+use noise::fractal::PinkNoise;
 
 fn clamp(val: f32, min: f32, max: f32) -> f32 {
     if val > max { max } else if val < min { min } else { val }
@@ -22,7 +23,7 @@ fn main() {
 
     // Write the PGM header first
     let _ = file.write_str(format!("P5\n{0} {1}\n{2}\n", 500u, 500u, 255u).as_slice());
-    
+
     // Write a sample of 500x500 pixels to disk
     for y in range(-250i, 250i) {
         for x in range(-250i, 250i) {
@@ -30,6 +31,6 @@ fn main() {
             let _ = file.write_u8(tmp as u8);
         }
     }
-    
-    println!("Output image written to example1.pgm");
+
+    println!("--- Output image written to example1.pgm");
 }
