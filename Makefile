@@ -8,35 +8,17 @@ TEST_FILE           = $(SRC_DIR)/test.rs
 CRATE_NAME          = $(shell $(RUSTC) --crate-name $(LIB_FILE))
 CRATE_FILES         = $(shell $(RUSTC) --crate-file-name $(LIB_FILE))
 
-DEPS_DIR            = target/deps
 LIB_DIR             = target
-TEST_DIR            = target/test
-EXAMPLE_DIR         = target/examples
+DEPS_DIR            = $(LIB_DIR)/deps
+TEST_DIR            = $(LIB_DIR)/test
+EXAMPLE_DIR         = $(LIB_DIR)/examples
+
 DOC_DIR             = doc
+DOC_PARAMS          = -L $(DEPS_DIR) --html-in-header src/doc/mathjax.html
+
+.PHONY: all lib test bench check doc clean help
 
 all: lib doc
-
-lib: $(LIB_FILE)
-	mkdir -p $(LIB_DIR)
-	$(RUSTC) -L $(DEPS_DIR) --out-dir=$(LIB_DIR) -O $(LIB_FILE)
-
-test: lib
-	mkdir -p $(TEST_DIR)
-	$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(TEST_DIR) --test $(TEST_FILE)
-	$(TEST_DIR)/test
-
-examples: example1
-
-example1: lib
-	mkdir -p $(EXAMPLE_DIR)
-	$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(EXAMPLE_DIR) examples/example1.rs
-	$(EXAMPLE_DIR)/example1
-	convert example1.pgm $(EXAMPLE_DIR)/example1.png
-	rm example1.pgm
-
-doc:
-	mkdir -p $(DOC_DIR)
-	$(RUSTDOC) --html-in-header src/doc/mathjax.html -o $(DOC_DIR) $(LIB_FILE)
 
 clean:
 	rm -rf $(LIB_DIR)
@@ -44,11 +26,46 @@ clean:
 	rm -rf $(BENCH_DIR)
 	rm -rf $(DOC_DIR)
 
-.PHONY: \
-	all \
-	lib \
-	test \
-	bench \
-	check \
-	doc \
-	clean
+help:
+	@echo "--- noise-rs"
+	@echo "make             - Build the library & documentation."
+	@echo "make lib         - Build the library."
+	@echo "make test        - Run the unit tests."
+	@echo "make bench       - Run benchmarks."
+	@echo "make doc         - Builds the library's documentation."
+	@echo "make examples    - Builds the examples."
+	@echo "make clean       - Removes all generated files."
+
+# Library
+
+lib: $(LIB_FILE)
+	mkdir -p $(LIB_DIR)
+	$(RUSTC) -L $(DEPS_DIR) --out-dir=$(LIB_DIR) -O $(LIB_FILE)
+
+# Testing and Benchmarking
+
+test: lib
+	mkdir -p $(TEST_DIR)
+	$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(TEST_DIR) --test $(TEST_FILE)
+	$(TEST_DIR)/test
+
+bench: test
+	$(TEST_DIR)/test --bench
+
+# Documentation
+
+doc:
+	mkdir -p $(DOC_DIR)
+	$(RUSTDOC) $(DOC_PARAMS) -o $(DOC_DIR) $(LIB_FILE)
+
+# Examples
+
+examples: example1
+
+example1: lib
+	mkdir -p $(EXAMPLE_DIR)
+	$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(EXAMPLE_DIR) examples/example1.rs
+	$(EXAMPLE_DIR)/example1
+	cd $(EXAMPLE_DIR)
+	convert example1.pgm example1.png
+	rm example1.pgm
