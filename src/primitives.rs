@@ -13,7 +13,7 @@ static HAIRY_2D: f32 = 0.366025403784439;
 static SKEW_2D: f32 = 0.211324865405187;
 
 /// Generate the coherent noise value for a point using the Simplex Noise
-/// method proposed by Ken Perlin.
+/// method proposed by Ken Perlin [1].
 ///
 /// Simplex noise in 2D essentially works by overlaying the plane with a grid of
 /// equilateral triangles (which are 2-simplexes) and pre-assigning a noise
@@ -21,12 +21,18 @@ static SKEW_2D: f32 = 0.211324865405187;
 /// triangle the desired point is in, and interpolate from the verticies of that
 /// triangle to the point.
 ///
-/// This implementation follows the GLSL code of McEwan et al. (2012), with some
-/// changes based on Stefan Gustavsson's Java code.
+/// This implementation follows the GLSL code of McEwan et al. (2012) [2], with
+/// some changes based on Stefan Gustavson's Java code [3].
 ///
-/// 1. McEwan et al. (2012).
-/// 2. Gustavsson (2010).
-/// 3. Ken Perlin
+/// 1. Perlin, Ken. (2002). _Improving Noise_. ACM Transactions on Graphics
+///    (Proceedings of SIGGRAPH 2002) 21(3): 681-682.
+/// 2. McEwan, Ian, David Sheets, Stefan Gustavson, and Mark Richardson. (2012).
+///    [_Efficient Computational Noise in GLSL_]
+///    (http://dx.doi.org/10.1080/2151237X.2012.649621). Journal of Graphics
+///    Tools 16(2): 85-94.
+/// 3. Gustavson, Stefan. (2005). [_Simplex Noise Demystified_]
+///    (http://www.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf).
+///    Technical Report. Linköping University, Sweden.
 pub fn snoise_2d(v: Vector2<f32>, seed: uint) -> f32 {
 	// First, determine which cell of N! = 2 simplexes we are in, and where
 	// in that cell we are.
@@ -105,10 +111,17 @@ pub fn snoise_2d(v: Vector2<f32>, seed: uint) -> f32 {
 
 /// For convenience, this trait is implemented by float-valued vectors in order
 /// to make it simple to compute pseudo-random gradient indicies. It follows
-/// the method laid out in McEwan et al. (2012).
+/// the method laid out in McEwan et al. (2012) [1].
+///
+/// 1. McEwan, Ian, David Sheets, Stefan Gustavson, and Mark Richardson. (2012).
+///    [_Efficient Computational Noise in GLSL_]
+///    (http://dx.doi.org/10.1080/2151237X.2012.649621). Journal of Graphics
+///    Tools 16(2): 85-94.
 pub trait McEwanPermutable {
 	/// Hashes the vector using the permutaion polynomial given by McEwan et
-	/// al. (2012), i.e. `(34x^2 + x) mod 289`.
+	/// al. (2012), i.e. $(34x\^2 + x) mod 289$. This map has reasonably good
+	/// shuffling, but should not be construed as a reliable hash for other
+	/// applications.
 	fn permutation_hash(&mut self) -> Self;
 }
 
