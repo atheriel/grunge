@@ -10,15 +10,15 @@ The API should be familiar to users of libnoise and the Coherent Noise Library, 
 subject to change without notice at this point in the project -- which is currently in
 the very early stages of development.
 
-Feature Wishlist
+Planned Features
 ----------------
 
-- [ ] Simplex noise primitives
-    - [x] 2D
-    - [ ] 3D
-    - [ ] 4D
-
-- [ ] Factal noise
-    - [x] Pink noise (also called Perlin noise)
-    - [x] Billow noise
-    - [ ] Ridged Multifractal noise
+* Simplex noise primitives in 2D, 3D, and 4D.
+* "Fractal" noise types: pink noise, billow niose, and ridged multifractal noise.
+* Voronoi noise types
+* Geometric noise types: sphere, cylinder, aribtrary functions.
+* Modifier types: add, subtract, multiply, turbulence, and so on.
+* Helpful utilities for generating images, textures, and so on.
+* Paralellization when it improves performance.
+* Many examples.
+* Language bindings?
