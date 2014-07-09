@@ -15,3 +15,4 @@ extern crate cgmath;
 pub mod common;
 pub mod primitives;
 pub mod fractal;
+pub mod geometry;
