@@ -9,5 +9,5 @@ install:
   - rustc -v
 script:
   - cargo build
-  - make
+  - make doc
   - make test
