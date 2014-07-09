@@ -2,7 +2,7 @@ RUSTC               = rustc
 RUSTDOC             = rustdoc
 
 SRC_DIR             = src
-LIB_FILE            = $(SRC_DIR)/noise.rs
+LIB_FILE            = $(SRC_DIR)/grunge.rs
 TEST_FILE           = $(SRC_DIR)/test.rs
 
 CRATE_NAME          = $(shell $(RUSTC) --crate-name $(LIB_FILE))
@@ -27,7 +27,7 @@ clean:
 	rm -rf $(DOC_DIR)
 
 help:
-	@echo "--- noise-rs"
+	@echo "--- grunge"
 	@echo "make             - Build the library & documentation."
 	@echo "make lib         - Build the library."
 	@echo "make test        - Run the unit tests."

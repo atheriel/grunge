@@ -1,9 +1,13 @@
+/*
+    This file is part of grunge, a coherent noise generation library.
+*/
+
 extern crate test;
 extern crate cgmath;
-extern crate noise;
+extern crate grunge;
 
 use cgmath::vector::Vector2;
-use noise::primitives::snoise_2d;
+use grunge::primitives::snoise_2d;
 
 #[bench]
 fn bench_simplex_noise_2d(b: &mut test::Bencher) {

@@ -1,12 +1,16 @@
+/*
+    This file is part of grunge, a coherent noise generation library.
+*/
+
 extern crate test;
-extern crate noise;
 extern crate cgmath;
+extern crate grunge;
 
 use std::io::{File, Truncate, Write};
 use cgmath::vector::Vector2;
 
-use noise::common::NoiseModule;
-use noise::fractal::PinkNoise;
+use grunge::common::NoiseModule;
+use grunge::fractal::PinkNoise;
 
 fn clamp(val: f32, min: f32, max: f32) -> f32 {
     if val > max { max } else if val < min { min } else { val }

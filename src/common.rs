@@ -1,5 +1,5 @@
 /*
-    This file is part of rs-noise, a procedural noise generation library.
+    This file is part of grunge, a coherent noise generation library.
 */
 
 use cgmath::vector::Vector2;

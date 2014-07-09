@@ -1,10 +1,10 @@
 [package]
-name = "noise"
+name = "grunge"
 version = "0.0.1"
 authors = [ "atheriel@gmail.com" ]
 
 [[lib]]
-name = "noise"
+name = "grunge"
 
 [dependencies.cgmath]
 git = "https://github.com/bjz/cgmath-rs.git"
