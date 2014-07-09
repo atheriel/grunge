@@ -40,6 +40,7 @@ help:
 
 lib: $(LIB_FILE)
 	mkdir -p $(LIB_DIR)
+	rm -f $(LIB_DIR)/libgrunge*.rlib  # Quick fix for using Cargo + make together
 	$(RUSTC) -L $(DEPS_DIR) --out-dir=$(LIB_DIR) -O $(LIB_FILE)
 
 # Testing and Benchmarking
