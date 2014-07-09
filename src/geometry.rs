@@ -32,6 +32,17 @@ impl NoiseModule for ConstNoise {
 	}
 }
 
+/// CheckerboardNoise will generate a checkerboard pattern.
+pub struct CheckerboardNoise;
+
+impl NoiseModule for CheckerboardNoise {
+    #[inline]
+    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+        if ((v.x as int) & 1 ^ (v.y as int) & 1) != 0
+            { Ok(-1.0) } else { Ok(1.0) }
+    }
+}
+
 /// CylinderNoise will generate noise around concentric cylinders whose base is
 /// in the x-y plane.
 pub struct CylinderNoise {
@@ -54,3 +65,33 @@ impl NoiseModule for CylinderNoise {
         Ok(1.0 - fract.min(1.0 - fract) * 4.0)
     }
 }
+
+/// This implementation is stubbed until there is 3D support.
+pub type SphereNoise = CylinderNoise;
+
+/// FunctionNoise allows the use of an arbitrary function to generate noise. Due
+/// to the nature of Rust's closures, it currently does not implement the
+/// NoiseModule trait, although it does provide the same functionality.
+pub struct FunctionNoise<'a> {
+    /// The function which maps points to a noise value.
+    pub func: |x: f32, y: f32|: 'a -> Result<f32, &str>
+}
+
+impl<'a> FunctionNoise<'a> {
+    /// Create a new FunctionNoise with the given function.
+    #[inline]
+    pub fn new(func: |x: f32, y: f32|: 'a -> Result<f32, &str>)
+        -> FunctionNoise<'a> { FunctionNoise { func: func } }
+
+    #[inline]
+    pub fn generate_2d(&mut self, v: Vector2<f32>) -> Result<f32, &str> {
+        (self.func)(v.x, v.y)
+    }
+}
+
+// impl<'a> NoiseModule for FunctionNoise<'a> {
+//     #[inline]
+//     fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+//         (self.func)(v.x, v.y)
+//     }
+// }
