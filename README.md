@@ -1,4 +1,4 @@
-Grunge
+Grunge [![Build Status](https://travis-ci.org/atheriel/grunge.svg?branch=master)](https://travis-ci.org/atheriel/grunge)
 ======
 
 Grunge is a pseudo-random coherent noise library in the spirit of libnoise, ACL,
