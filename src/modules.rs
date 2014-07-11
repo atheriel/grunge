@@ -7,5 +7,14 @@
 //! It is intended to serve as the primary API for the library.
 
 pub use common::NoiseModule;
-pub use fractal::{PinkNoise, BillowNoise};
-pub use geometry::{ConstNoise, CylinderNoise};
+pub use fractal::{
+    PinkNoise,
+    BillowNoise
+};
+pub use geometry::{
+    ConstNoise,
+    CheckerboardNoise,
+    CylinderNoise,
+    SphereNoise,
+    FunctionNoise
+};

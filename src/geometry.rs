@@ -69,9 +69,21 @@ impl NoiseModule for CylinderNoise {
 /// This implementation is stubbed until there is 3D support.
 pub type SphereNoise = CylinderNoise;
 
-/// FunctionNoise allows the use of an arbitrary function to generate noise. Due
-/// to the nature of Rust's closures, it currently does not implement the
-/// NoiseModule trait, although it does provide the same functionality.
+/// FunctionNoise allows the use of an arbitrary function to generate noise.
+///
+/// Note that you must call it using `mut_generate_*` instead of the usual
+/// `generate_*` methods, due to the nature of Rust's closures.
+///
+/// ## Example
+///
+/// Implementing a "Gaussian" Noise generator.
+///
+/// ```rust
+/// let gaus = FunctionNoise::new(|x, y| {
+///     1 / (2 * Float::pi()) * (- 0.5 * (x^2 + y^2)).exp()
+/// });
+/// println!("{}", gauss.mut_generate_2d(Vector2::unit_x()));
+/// ```
 pub struct FunctionNoise<'a> {
     /// The function which maps points to a noise value.
     pub func: |x: f32, y: f32|: 'a -> Result<f32, &str>
