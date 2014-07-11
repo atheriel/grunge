@@ -10,6 +10,43 @@ The API should be familiar to users of libnoise and the Coherent Noise Library, 
 subject to change without notice at this point in the project -- which is currently in
 the very early stages of development.
 
+Example
+-------
+
+The following writes a [PGM](http://en.wikipedia.org/wiki/Portable_graymap) file using
+the PinkNoise generator.
+
+```rust
+use std::io::{File, Truncate, Write};
+use cgmath::vector::Vector2;
+use grunge::module::{NoiseModule, PinkNoise};
+
+let noise = PinkNoise::new(0u);
+let p = Path::new("example.pgm");
+
+let mut file = match File::open_mode(&p, Truncate, Write) {
+    Ok(f) => f,
+    Err(e) => fail!("--- File error: {}", e),
+};
+
+// Write the PGM header first. P5 is for binary data (i.e. u8).
+let _ = file.write_str(format!("P5\n{0} {1}\n{2}\n", 500u, 500u, 255u).as_slice());
+    
+// Write a sample of 500x500 pixels to the image file
+for y in range(-250i, 250i) {
+    for x in range(-250i, 250i) {
+        let point = Vector2::new((x as f32) / 100.0, (y as f32) / 100.0);
+        let tmp = noise.generate_2d(point).unwrap() * 0.15 + 0.5; // Usually fits in [0, 1]
+        let _ = file.write_u8((tmp * 255.0) as u8);
+    }
+}
+
+println!("--- Output image written to example.pgm");
+```
+
+In case you can't open the PGM format, ImageMagick's `convert example.pgm example.png`
+may do the trick.
+
 Planned Features
 ----------------
 
