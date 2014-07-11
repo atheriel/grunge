@@ -83,15 +83,16 @@ impl<'a> FunctionNoise<'a> {
     pub fn new(func: |x: f32, y: f32|: 'a -> Result<f32, &str>)
         -> FunctionNoise<'a> { FunctionNoise { func: func } }
 
+}
+
+impl<'a> NoiseModule for FunctionNoise<'a> {
     #[inline]
-    pub fn generate_2d(&mut self, v: Vector2<f32>) -> Result<f32, &str> {
+    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+        Err("Closures require a mutable environment. Use mut_generate_2d().")
+    }
+
+    #[inline]
+    fn mut_generate_2d(&mut self, v: Vector2<f32>) -> Result<f32, &str> {
         (self.func)(v.x, v.y)
     }
 }
-
-// impl<'a> NoiseModule for FunctionNoise<'a> {
-//     #[inline]
-//     fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-//         (self.func)(v.x, v.y)
-//     }
-// }
