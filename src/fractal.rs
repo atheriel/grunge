@@ -2,6 +2,14 @@
     This file is part of grunge, a coherent noise generation library.
 */
 
+//! This module contains types for generating noise related to fractal patterns.
+//!
+//! These are the main coherent noise implementations. PinkNoise and BillowNoise
+//! in particular can be traced back to ideas used by Ken Perlin in
+//! [Tron](http://en.wikipedia.org/wiki/Tron), and later demonstrated when he
+//! introduced the first "noise" function to industry in 1985 (where they were
+//! used to create cloud and fire textures, respectively).
+
 use std::default::Default;
 use cgmath::vector::Vector2;
 

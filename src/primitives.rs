@@ -2,6 +2,12 @@
     This file is part of grunge, a coherent noise generation library.
 */
 
+//! This module contains the primitive noise-making functions.
+//!
+//! Usually, the higher-level implementations available in the [modules]
+//! (../modules/index.html) module are more desirable than using these functions
+//! on their own.
+
 use cgmath::vector::{Vector, Vector2, Vector3, Vector4, dot};
 
 /// The factor needed to skew x-y coordinates to coordinates on the grid of

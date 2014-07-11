@@ -79,8 +79,8 @@ pub type SphereNoise = CylinderNoise;
 /// Implementing a "Gaussian" Noise generator.
 ///
 /// ```rust
-/// let gaus = FunctionNoise::new(|x, y| {
-///     1 / (2 * Float::pi()) * (- 0.5 * (x^2 + y^2)).exp()
+/// let gauss = FunctionNoise::new(|x, y| {
+///     Ok(1 / (2 * Float::pi()) * (- 0.5 * (x^2 + y^2)).exp())
 /// });
 /// println!("{}", gauss.mut_generate_2d(Vector2::unit_x()));
 /// ```
