@@ -1,12 +1,10 @@
 env:
   global:
     - secure: oFsC77WVP3ggPSSvW9ViS5gtperGGHtIs38MsBw79kIbIj3miamLVz8aR1gmSnHZu1oMf6LWG2N9O9WYYCJUGGn/G3C+SJ6MORVYLjm4cYspZBCaDrkHPcW37y8cBiDM1Ueyc7qOj25XMjwO2fTO2ujXPavOOlQCJSTbPtimrNg=
-before_install:
-  - sudo add-apt-repository --yes ppa:hansjorg/rust
-  - sudo add-apt-repository --yes ppa:cmrx64/cargo
-  - sudo apt-get update -qq
 install:
-  - sudo apt-get install -qq rust-nightly cargo
+  - curl http://static.rust-lang.org/cargo-dist/cargo-nightly-linux.tar.gz |
+    sudo tar --strip-components 1 -C /usr -xzf -
+  - curl http://www.rust-lang.org/rustup.sh | sudo sh -
   - rustc -v
 script:
   - cargo build
