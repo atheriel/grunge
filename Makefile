@@ -65,7 +65,7 @@ examples: example1
 
 example1: lib
 	mkdir -p $(EXAMPLE_DIR)
-	$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(EXAMPLE_DIR) examples/example1.rs
+	$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(EXAMPLE_DIR) -O examples/example1.rs
 	$(EXAMPLE_DIR)/example1
 	cd $(EXAMPLE_DIR)
 	convert example1.pgm example1.png

@@ -2,15 +2,15 @@
     This file is part of grunge, a coherent noise generation library.
 */
 
+#![feature(globs)]
+
 extern crate test;
 extern crate cgmath;
 extern crate grunge;
 
 use cgmath::vector::Vector2;
 use grunge::primitives::snoise_2d;
-use grunge::common::NoiseModule;
-use grunge::fractal::{PinkNoise, BillowNoise};
-use grunge::geometry::{ConstNoise, CylinderNoise};
+use grunge::modules::*;
 
 #[bench]
 fn bench_simplex_noise_2d(b: &mut test::Bencher) {

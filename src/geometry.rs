@@ -11,6 +11,7 @@ use std::default::Default;
 use cgmath::vector::{Vector2, Vector, EuclideanVector};
 
 use common::NoiseModule;
+use modifiers::Modifiable;
 
 /// ConstNoise will generate the same value of noise for any input coordinate.
 pub struct ConstNoise {
@@ -32,6 +33,8 @@ impl NoiseModule for ConstNoise {
 	}
 }
 
+impl Modifiable for ConstNoise {}
+
 /// CheckerboardNoise will generate a checkerboard pattern.
 pub struct CheckerboardNoise;
 
@@ -42,6 +45,8 @@ impl NoiseModule for CheckerboardNoise {
             { Ok(-1.0) } else { Ok(1.0) }
     }
 }
+
+impl Modifiable for CheckerboardNoise {}
 
 /// CylinderNoise will generate noise around concentric cylinders whose base is
 /// in the x-y plane.
@@ -65,6 +70,8 @@ impl NoiseModule for CylinderNoise {
         Ok(1.0 - fract.min(1.0 - fract) * 4.0)
     }
 }
+
+impl Modifiable for CylinderNoise {}
 
 /// This implementation is stubbed until there is 3D support.
 pub type SphereNoise = CylinderNoise;
@@ -108,3 +115,5 @@ impl<'a> NoiseModule for FunctionNoise<'a> {
         (self.func)(v.x, v.y)
     }
 }
+
+impl<'a> Modifiable for FunctionNoise<'a> {}

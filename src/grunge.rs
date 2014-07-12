@@ -18,3 +18,4 @@ pub mod common;
 pub mod primitives;
 pub mod fractal;
 pub mod geometry;
+pub mod modifiers;

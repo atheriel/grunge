@@ -7,6 +7,7 @@
 //! It is intended to serve as the primary API for the library.
 
 pub use common::NoiseModule;
+pub use modifiers::Modifiable;
 pub use fractal::{
     PinkNoise,
     BillowNoise
@@ -17,4 +18,8 @@ pub use geometry::{
     CylinderNoise,
     SphereNoise,
     FunctionNoise
+};
+pub use modifiers::{
+    ClampedNoise,
+    ScaledBiasedNoise
 };
