@@ -9,13 +9,28 @@ use cgmath::vector::Vector2;
 
 use common::NoiseModule;
 
+/// This trait provides a nice way of turning unmodified noise into modified
+/// noise. All NoiseModule implementations also implement this trait, so that
+/// you can usually call `noise.clamp(0.0, 1.0)` instead of instantiating the
+/// ClampedNoise type directly.
 pub trait Modifiable : NoiseModule {
+    /// Modifies a source noise module by bounding its output between a `min`
+    ///  and `max` value.
     fn clamp<'a>(&'a self, min: f32, max: f32) -> ClampedNoise<'a> {
         ClampedNoise { source: self, min: min, max: max }
     }
 
+    /// Modifies a source noise module by multiplying its output by a constant
+    /// `scale` and applying a constant `bias` shift up or downwards.
     fn scalebias<'a>(&'a self, scale: f32, bias: f32) -> ScaledBiasedNoise<'a> {
         ScaledBiasedNoise { source: self, scale: scale, bias: bias }
+    }
+
+    /// Modifies a source noise module by translating its input by a constant
+    /// vector.
+    fn translate<'a>(&'a self, translation: Vector2<f32>)
+        -> TranslatedNoise<'a> {
+        TranslatedNoise { source: self, translation: translation }
     }
 }
 
@@ -82,7 +97,7 @@ pub struct ScaledBiasedNoise<'a> {
 }
 
 impl<'a> ScaledBiasedNoise<'a> {
-    /// Creates a new ClampedNoise with a default scale and bias values of
+    /// Creates a new ScaledBiasedNoise with a default scale and bias values of
     /// `1.0` and `0.0`, respectively (i.e. no change in output).
     pub fn new(source: &'a NoiseModule) -> ScaledBiasedNoise<'a> {
         ScaledBiasedNoise { source: source, scale: 1.0, bias: 0.0 }
@@ -99,3 +114,29 @@ impl<'a> NoiseModule for ScaledBiasedNoise<'a> {
 }
 
 impl<'a> Modifiable for ScaledBiasedNoise<'a> {}
+
+/// Modifies a source noise module by multiplying its input by a constant vector
+/// shift.
+pub struct TranslatedNoise<'a> {
+    /// The source module.
+    pub source: &'a NoiseModule,
+
+    /// The linear transformation to apply to input coordinates.
+    pub translation: Vector2<f32>,
+}
+
+impl<'a> TranslatedNoise<'a> {
+    /// Creates a new TranslatedNoise with the given source and translation.
+    pub fn new(source: &'a NoiseModule, translation: Vector2<f32>)
+        -> TranslatedNoise<'a> {
+        TranslatedNoise { source: source, translation: translation }
+    }
+}
+
+impl<'a> NoiseModule for TranslatedNoise<'a> {
+    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+        self.source.generate_2d(v + self.translation)
+    }
+}
+
+impl<'a> Modifiable for TranslatedNoise<'a> {}
