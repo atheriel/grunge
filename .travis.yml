@@ -5,6 +5,8 @@ install:
   - curl http://static.rust-lang.org/cargo-dist/cargo-nightly-linux.tar.gz |
     sudo tar --strip-components 1 -C /usr -xzf -
   - curl http://www.rust-lang.org/rustup.sh | sudo sh -
+  - export LD_LIBRARY_PATH = LD_LIBRARY_PATH:/usr/local/lib
+  - echo LD_LIBRARY_PATH
   - rustc -v
 script:
   - cargo build
