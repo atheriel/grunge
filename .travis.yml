@@ -6,7 +6,6 @@ install:
     sudo tar --strip-components 1 -C /usr -xzf -
   - curl http://www.rust-lang.org/rustup.sh | sudo sh -
   - export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
-  - echo LD_LIBRARY_PATH
   - rustc -v
 script:
   - cargo build

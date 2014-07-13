@@ -2,7 +2,6 @@
     This file is part of grunge, a coherent noise generation library.
 */
 
-extern crate test;
 extern crate cgmath;
 extern crate grunge;
 
@@ -37,5 +36,5 @@ fn main() {
         }
     }
 
-    println!("--- Output image written to example1.pgm");
+    println!("Output image written to example1.pgm");
 }
