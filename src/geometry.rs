@@ -2,7 +2,7 @@
     This file is part of grunge, a coherent noise generation library.
 */
 
-//! This module contains types for generating noise with geometric forms.
+//! Types for generating noise with geometric forms.
 //!
 //! While these types do not produce "coherent" noise per se, they can be very
 //! useful when constructing complex, multi-component noise.
@@ -10,7 +10,7 @@
 use std::default::Default;
 use cgmath::vector::{Vector2, Vector, EuclideanVector};
 
-use common::NoiseModule;
+use primitives::NoiseModule;
 use modifiers::Modifiable;
 
 /// ConstNoise will generate the same value of noise for any input coordinate.
@@ -91,6 +91,7 @@ pub type SphereNoise = CylinderNoise;
 /// });
 /// println!("{}", gauss.mut_generate_2d(Vector2::unit_x()));
 /// ```
+#[experimental]
 pub struct FunctionNoise<'a> {
     /// The function which maps points to a noise value.
     pub func: |x: f32, y: f32|: 'a -> Result<f32, &str>
@@ -115,5 +116,3 @@ impl<'a> NoiseModule for FunctionNoise<'a> {
         (self.func)(v.x, v.y)
     }
 }
-
-impl<'a> Modifiable for FunctionNoise<'a> {}

@@ -2,11 +2,11 @@
     This file is part of grunge, a coherent noise generation library.
 */
 
-//! This module re-exports NoiseModule and all types that implement it.
+//! Re-exports NoiseModule and all types that implement it.
 //!
-//! It is intended to serve as the primary API for the library.
+//! This is intended to serve as the primary API for the library.
 
-pub use common::NoiseModule;
+pub use primitives::NoiseModule;
 pub use modifiers::Modifiable;
 pub use fractal::{
     PinkNoise,

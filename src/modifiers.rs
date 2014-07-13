@@ -2,12 +2,12 @@
     This file is part of grunge, a coherent noise generation library.
 */
 
-//! This module contains types for generating noise by taking a source noise
-//! generator and modifying its output in some way.
+//! Types for generating noise by taking a source noise generator and modifying
+//! its output in some way.
 
 use cgmath::vector::Vector2;
 
-use common::NoiseModule;
+use primitives::NoiseModule;
 
 /// This trait provides a nice way of turning unmodified noise into modified
 /// noise. All NoiseModule implementations also implement this trait, so that
