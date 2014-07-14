@@ -14,11 +14,22 @@ use primitives::NoiseModule;
 use modifiers::Modifiable;
 
 /// ConstNoise will generate the same value of noise for any input coordinate.
+///
+/// ## Example
+///
+/// ```rust
+/// let noise = ConstNoise::new(5.0);
+/// assert_eq!(noise.generate_2d(Vector2::unit_x()),
+///            noise.generate_2d(Vector2::unit_y()));
+/// ```
+#[stable]
+#[deriving(Clone)]
 pub struct ConstNoise {
     /// The value of noise to output.
 	pub value: f32
 }
 
+#[stable]
 impl ConstNoise {
     /// Create a new ConstNoise with the given value.
 	pub fn new(value: f32) -> ConstNoise {
@@ -36,6 +47,8 @@ impl NoiseModule for ConstNoise {
 impl Modifiable for ConstNoise {}
 
 /// CheckerboardNoise will generate a checkerboard pattern.
+#[deprecated = "This type will soon be removed."]
+#[deriving(Clone)]
 pub struct CheckerboardNoise;
 
 impl NoiseModule for CheckerboardNoise {
@@ -50,6 +63,7 @@ impl Modifiable for CheckerboardNoise {}
 
 /// CylinderNoise will generate noise around concentric cylinders whose base is
 /// in the x-y plane.
+#[deriving(Clone)]
 pub struct CylinderNoise {
     /// The frequency of the cylinders. This value can be used to effectively
     /// change how far the rings are apart, but really just scales the input.
@@ -103,6 +117,12 @@ impl<'a> FunctionNoise<'a> {
     pub fn new(func: |x: f32, y: f32|: 'a -> Result<f32, &str>)
         -> FunctionNoise<'a> { FunctionNoise { func: func } }
 
+}
+
+impl<'a> Clone for FunctionNoise<'a> {
+	fn clone(&self) -> FunctionNoise<'a> {
+		FunctionNoise::new(|_, _| Err("Cannot clone FunctionNoise."))
+	}
 }
 
 impl<'a> NoiseModule for FunctionNoise<'a> {

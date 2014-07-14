@@ -37,3 +37,8 @@ fn test_geom_output() {
     assert_eq!(con.generate_2d(Vector2::new(5.01, -11.77)).unwrap(), 5.0);
     assert_eq!(cyl.generate_2d(Vector2::new(1.0, 0.0)).unwrap(), 1.0);
 }
+
+#[test]
+fn test_boxes() {
+    let noise = PinkNoise::new(0u).scalebias(0.5, 0.5).clamp(0.0, 1.0);
+}
