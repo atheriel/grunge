@@ -4,6 +4,9 @@
 
 //! Types for generating noise by taking a source noise generator and modifying
 //! its output in some way.
+//!
+//! The documentation for [Modifiable](trait.Modifiable.html) provides some more
+//! detail on their use.
 
 use cgmath::vector::Vector2;
 
@@ -20,6 +23,25 @@ impl Clone for Box<NoiseModule> {
 /// noise. All NoiseModule implementations also implement this trait, so that
 /// you can usually call `noise.clamp(0.0, 1.0)` instead of instantiating the
 /// ClampedNoise type directly.
+///
+/// ## Example
+///
+/// The trait Modifiable provides a way to conveniently modify other NoiseModule
+/// sources, and its methods may be chained. The following is a common way to
+/// change the range of PinkNoise from [-1, 1] to [0, 1]:
+///
+/// ```rust
+/// extern crate cgmath;
+/// extern crate grunge;
+///
+/// use cgmath::vector::Vector2;
+/// use grunge::modules::{NoiseModule, Modifiable, PinkNoise};
+///
+/// fn main() {
+///     let noise = PinkNoise::new(37).scalebias(0.5, 0.5).clamp(0.0, 1.0);
+///     println!("{}", noise.generate_2d(Vector2::new(1.0, -1.0)));
+/// }
+/// ```
 pub trait Modifiable : NoiseModule {
     /// Modifies a source noise module by bounding its output between a `min`
     ///  and `max` value.
@@ -44,18 +66,30 @@ pub trait Modifiable : NoiseModule {
 /// `max` value.
 ///
 /// ## Example
+///
 /// ClampedNoise can be created one of three ways: with `new()`, which uses the
 /// default min and max values of `-1.0` and `1.0`, respectively; with a struct
-/// literal, or with the `clamp()` method on a source module itself.
+/// literal, or with the `clamp()` method on a source module itself. Note that
+/// when using the struct literal, you will need to convert the source module to
+/// a boxed representation using NoiseModule's `to_box()` method.
 ///
 /// ```rust
-/// use grunge::modules::*;
+/// extern crate cgmath;
+/// extern crate grunge;
 ///
-/// let source = PinkNoise::new(26);
-/// let first_clamp = ClampedNoise::new(source);
-/// let other_clamp = ClampedNoise { source: source, min: -0.5, max: 0.5 };
-/// let final_clamp = source.clamp(-0.5, 0.5);
-/// assert_eq!(other_clamp, final_clamp);
+/// use cgmath::vector::Vector2;
+/// use grunge::modules::{NoiseModule, Modifiable, PinkNoise, ClampedNoise};
+///
+/// fn main() {
+///     let source = PinkNoise::new(26);
+///     let first_clamp = ClampedNoise::new(&source);
+///     let other_clamp = ClampedNoise {
+///         source: source.to_box(), min: -0.5, max: 0.5
+///     };
+///     let final_clamp = source.clamp(-0.5, 0.5);
+///     assert_eq!(other_clamp.generate_2d(Vector2::new(1.0, -1.0)),
+///                final_clamp.generate_2d(Vector2::new(1.0, -1.0)));
+/// }
 /// ```
 pub struct ClampedNoise {
     /// The source module.

@@ -24,13 +24,13 @@
 //! The following writes a [PGM](http://en.wikipedia.org/wiki/Portable_graymap)
 //! file using the PinkNoise generator.
 //!
-//! ```rust{.example}
+//! ```ignore
 //! extern crate cgmath;
 //! extern crate grunge;
 //!
 //! use std::io::{File, Truncate, Write};
 //! use cgmath::vector::Vector2;
-//! use grunge::module::{NoiseModule, PinkNoise};
+//! use grunge::modules::{NoiseModule, PinkNoise};
 //!
 //! fn main() {
 //!     let noise = PinkNoise::new(0u);

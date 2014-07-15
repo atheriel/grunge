@@ -9,7 +9,8 @@ install:
   - rustc -v
 script:
   - cargo build
-  - make doc
   - make test
+  - make doc
+  - make doctest
 after_script:
   - curl http://www.rust-ci.org/artifacts/put?t=$RUSTCI_TOKEN | sh

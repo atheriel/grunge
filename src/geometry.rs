@@ -18,12 +18,20 @@ use modifiers::Modifiable;
 /// ## Example
 ///
 /// ```rust
-/// let noise = ConstNoise::new(5.0);
-/// assert_eq!(noise.generate_2d(Vector2::unit_x()),
-///            noise.generate_2d(Vector2::unit_y()));
+/// extern crate cgmath;
+/// extern crate grunge;
+///
+/// use cgmath::vector::Vector2;
+/// use grunge::modules::{NoiseModule, ConstNoise};
+///
+/// fn main() {
+///     let noise = ConstNoise::new(5.0);
+///     assert_eq!(noise.generate_2d(Vector2::new(101.26, -38.9)),
+///                noise.generate_2d(Vector2::new(-26.0, 0.0)));
+/// }
 /// ```
 #[stable]
-#[deriving(Clone)]
+#[deriving(Clone, PartialEq)]
 pub struct ConstNoise {
     /// The value of noise to output.
 	pub value: f32
@@ -63,7 +71,26 @@ impl Modifiable for CheckerboardNoise {}
 
 /// CylinderNoise will generate noise around concentric cylinders whose base is
 /// in the x-y plane.
-#[deriving(Clone)]
+///
+/// ## Example
+///
+/// Demonstration of changing the frequency of the cylinders.
+///
+/// ```rust
+/// extern crate cgmath;
+/// extern crate grunge;
+///
+/// use cgmath::vector::Vector2;
+/// use grunge::modules::{NoiseModule, CylinderNoise};
+///
+/// fn main() {
+///     let noise1 = CylinderNoise::new(1.0);
+///     let noise5 = CylinderNoise::new(5.0);
+///     assert_eq!(noise1.generate_2d(Vector2::new(1.0, 0.0)),
+///                noise5.generate_2d(Vector2::new(-5.0, 0.0)));
+/// }
+/// ```
+#[deriving(Clone, PartialEq)]
 pub struct CylinderNoise {
     /// The frequency of the cylinders. This value can be used to effectively
     /// change how far the rings are apart, but really just scales the input.
@@ -97,13 +124,22 @@ pub type SphereNoise = CylinderNoise;
 ///
 /// ## Example
 ///
-/// Implementing a "Gaussian" Noise generator.
+/// Implementing a "Gaussian" (Multivariate Normal) Noise generator.
 ///
 /// ```rust
-/// let gauss = FunctionNoise::new(|x, y| {
-///     Ok(1 / (2 * Float::pi()) * (- 0.5 * (x^2 + y^2)).exp())
-/// });
-/// println!("{}", gauss.mut_generate_2d(Vector2::unit_x()));
+/// extern crate cgmath;
+/// extern crate grunge;
+///
+/// use cgmath::vector::Vector2;
+/// use grunge::modules::{NoiseModule, FunctionNoise};
+///
+/// fn main() {
+///     // FunctionNoise objects must be mutable
+///     let mut gauss = FunctionNoise::new(|x, y| {
+///         Ok(1.0 / (2.0 * Float::pi()) * (- 0.5 * (x.powi(2) + y.powi(2))).exp())
+///     });
+///     println!("{}", gauss.mut_generate_2d(Vector2::new(1.0, 1.0)));
+/// }
 /// ```
 #[experimental]
 pub struct FunctionNoise<'a> {

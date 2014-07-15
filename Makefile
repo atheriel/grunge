@@ -17,6 +17,7 @@ EXAMPLE_DIR         = $(LIB_DIR)/examples
 
 DOC_DIR             = doc
 DOC_PARAMS          = -L $(DEPS_DIR) --html-in-header src/docs/mathjax.html
+DOC_TEST_PARAMS     = -L $(LIB_DIR) --test
 
 .PHONY: all lib test bench check doc clean help
 
@@ -34,6 +35,7 @@ help:
 	@echo "make test        - Run the unit tests."
 	@echo "make bench       - Run benchmarks."
 	@echo "make doc         - Builds the library's documentation."
+	@echo "make doctest     - Runs the examples in the documentation."
 	@echo "make examples    - Builds the examples."
 	@echo "make clean       - Removes all generated files."
 
@@ -64,6 +66,11 @@ doc:
 	@echo "--- Generating documentation."
 	@mkdir -p $(DOC_DIR)
 	@$(RUSTDOC) $(DOC_PARAMS) -o $(DOC_DIR) $(LIB_FILE)
+
+doctest:
+	@echo "--- Running documentation examples:"
+	@mkdir -p $(DOC_DIR)
+	@$(RUSTDOC) $(DOC_PARAMS) $(DOC_TEST_PARAMS) -o $(DOC_DIR) $(LIB_FILE)
 
 # Examples
 
