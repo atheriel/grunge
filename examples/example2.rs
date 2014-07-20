@@ -2,14 +2,14 @@
     This file is part of grunge, a coherent noise generation library.
 */
 
-extern crate cgmath;
 extern crate grunge;
 
 use std::io::{File, Truncate, Write};
-use cgmath::vector::Vector2;
 
+use grunge::vectors::Vector2;
 use grunge::modules::{NoiseModule, Modifiable, PinkNoise};
 
+#[deriving(Clone)]
 struct GaussNoise {
     pub variance: f32
 }

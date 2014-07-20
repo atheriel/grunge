@@ -25,11 +25,10 @@
 //! file using the PinkNoise generator.
 //!
 //! ```ignore
-//! extern crate cgmath;
 //! extern crate grunge;
 //!
 //! use std::io::{File, Truncate, Write};
-//! use cgmath::vector::Vector2;
+//! use grunge::vectors::Vector2;
 //! use grunge::modules::{NoiseModule, PinkNoise};
 //!
 //! fn main() {
@@ -74,6 +73,8 @@ extern crate cgmath;
 pub mod modules;
 
 pub mod primitives;
+pub mod vectors;
+
 pub mod fractal;
 pub mod geometry;
 pub mod modifiers;

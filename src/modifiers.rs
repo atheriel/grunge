@@ -31,10 +31,9 @@ impl Clone for Box<NoiseModule> {
 /// change the range of PinkNoise from [-1, 1] to [0, 1]:
 ///
 /// ```rust
-/// extern crate cgmath;
 /// extern crate grunge;
 ///
-/// use cgmath::vector::Vector2;
+/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, Modifiable, PinkNoise};
 ///
 /// fn main() {
@@ -74,10 +73,9 @@ pub trait Modifiable : NoiseModule {
 /// a boxed representation using NoiseModule's `to_box()` method.
 ///
 /// ```rust
-/// extern crate cgmath;
 /// extern crate grunge;
 ///
-/// use cgmath::vector::Vector2;
+/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, Modifiable, PinkNoise, ClampedNoise};
 ///
 /// fn main() {

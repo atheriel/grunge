@@ -18,10 +18,9 @@ use modifiers::Modifiable;
 /// ## Example
 ///
 /// ```rust
-/// extern crate cgmath;
 /// extern crate grunge;
 ///
-/// use cgmath::vector::Vector2;
+/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, ConstNoise};
 ///
 /// fn main() {
@@ -77,10 +76,9 @@ impl Modifiable for CheckerboardNoise {}
 /// Demonstration of changing the frequency of the cylinders.
 ///
 /// ```rust
-/// extern crate cgmath;
 /// extern crate grunge;
 ///
-/// use cgmath::vector::Vector2;
+/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, CylinderNoise};
 ///
 /// fn main() {
@@ -130,10 +128,9 @@ pub type FunctionNoiseFunction = fn(x: f32, y: f32) -> Result<f32, &str>;
 /// Implementing a "Gaussian" (Multivariate Normal) Noise generator.
 ///
 /// ```rust
-/// extern crate cgmath;
 /// extern crate grunge;
 ///
-/// use cgmath::vector::Vector2;
+/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, FunctionNoise};
 ///
 /// fn gaussian(x: f32, y: f32) -> Result<f32, &str> {
