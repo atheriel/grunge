@@ -117,6 +117,9 @@ impl Modifiable for CylinderNoise {}
 /// This implementation is stubbed until there is 3D support.
 pub type SphereNoise = CylinderNoise;
 
+/// Functions applicable for passing to FunctionNoise.
+pub type FunctionNoiseFunction = fn(x: f32, y: f32) -> Result<f32, &str>;
+
 /// FunctionNoise allows the use of an arbitrary function to generate noise.
 ///
 /// Note that you must call it using `mut_generate_*` instead of the usual
@@ -133,35 +136,37 @@ pub type SphereNoise = CylinderNoise;
 /// use cgmath::vector::Vector2;
 /// use grunge::modules::{NoiseModule, FunctionNoise};
 ///
+/// fn gaussian(x: f32, y: f32) -> Result<f32, &str> {
+///     Ok(1.0 / (2.0 * Float::pi()) * (- 0.5 * (x.powi(2) + y.powi(2))).exp())
+/// }
+///
 /// fn main() {
 ///     // FunctionNoise objects must be mutable
-///     let mut gauss = FunctionNoise::new(|x, y| {
-///         Ok(1.0 / (2.0 * Float::pi()) * (- 0.5 * (x.powi(2) + y.powi(2))).exp())
-///     });
+///     let mut gauss = FunctionNoise::new(gaussian);
 ///     println!("{}", gauss.mut_generate_2d(Vector2::new(1.0, 1.0)));
 /// }
 /// ```
 #[experimental]
-pub struct FunctionNoise<'a> {
+pub struct FunctionNoise {
     /// The function which maps points to a noise value.
-    pub func: |x: f32, y: f32|: 'a -> Result<f32, &str>
+    pub func: FunctionNoiseFunction
 }
 
-impl<'a> FunctionNoise<'a> {
+impl FunctionNoise {
     /// Create a new FunctionNoise with the given function.
     #[inline]
-    pub fn new(func: |x: f32, y: f32|: 'a -> Result<f32, &str>)
-        -> FunctionNoise<'a> { FunctionNoise { func: func } }
+    pub fn new(func: FunctionNoiseFunction)
+        -> FunctionNoise { FunctionNoise { func: func } }
 
 }
 
-impl<'a> Clone for FunctionNoise<'a> {
-	fn clone(&self) -> FunctionNoise<'a> {
-		FunctionNoise::new(|_, _| Err("Cannot clone FunctionNoise."))
+impl Clone for FunctionNoise {
+	fn clone(&self) -> FunctionNoise {
+		fail!("Cannot clone FunctionNoise.")
 	}
 }
 
-impl<'a> NoiseModule for FunctionNoise<'a> {
+impl NoiseModule for FunctionNoise {
     #[inline]
     fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
         Err("Closures require a mutable environment. Use mut_generate_2d().")
