@@ -32,23 +32,23 @@ use modifiers::Modifiable;
 #[deriving(Clone, PartialEq)]
 pub struct ConstNoise {
     /// The value of noise to output.
-	pub value: f32
+    pub value: f32
 }
 
 #[stable]
 impl ConstNoise {
     /// Create a new ConstNoise with the given value.
-	pub fn new(value: f32) -> ConstNoise {
-		ConstNoise { value: value }
-	}
+    pub fn new(value: f32) -> ConstNoise {
+        ConstNoise { value: value }
+    }
 }
 
 impl NoiseModule for ConstNoise {
-	#[allow(unused_variable)]
-	#[inline]
-	fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-		Ok(self.value)
-	}
+    #[allow(unused_variable)]
+    #[inline]
+    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+        Ok(self.value)
+    }
 }
 
 impl Modifiable for ConstNoise {}
@@ -154,9 +154,9 @@ impl<'a> FunctionNoise<'a> {
 }
 
 impl<'a> Clone for FunctionNoise<'a> {
-	fn clone(&self) -> FunctionNoise<'a> {
-		FunctionNoise { func: self.func }
-	}
+    fn clone(&self) -> FunctionNoise<'a> {
+        FunctionNoise { func: self.func }
+    }
 }
 
 impl<'a> NoiseModule for FunctionNoise<'a> {
