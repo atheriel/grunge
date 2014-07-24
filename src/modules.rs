@@ -23,5 +23,6 @@ pub use modifiers::{
     ClampedNoise,
     ScaledBiasedNoise,
     TranslatedNoise,
-    RotatedNoise
+    RotatedNoise,
+    ModifierNoise
 };

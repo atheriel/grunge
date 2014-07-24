@@ -252,3 +252,43 @@ impl NoiseModule for RotatedNoise {
 }
 
 impl Modifiable for RotatedNoise {}
+
+/// Functions applicable for passing to ModifierNoise.
+pub type ModifierNoiseFunction = fn(x: f32, y: f32, out: f32) -> Result<f32, &str>;
+
+/// ModifierNoise allows the use of an arbitrary function to modify noise.
+#[experimental]
+pub struct ModifierNoise<'a> {
+    /// The source module.
+    pub source: Box<NoiseModule>,
+
+    /// The function which maps points and initial output to a noise value.
+    pub func: &'a ModifierNoiseFunction
+}
+
+impl<'a> ModifierNoise<'a> {
+    /// Create a new ModifierNoise with the given function.
+    #[inline]
+    pub fn new(source: &NoiseModule, func: &'a ModifierNoiseFunction)
+        -> ModifierNoise<'a> {
+            ModifierNoise { source: source.to_box(), func: func }
+    }
+}
+
+impl<'a> Clone for ModifierNoise<'a> {
+    fn clone(&self) -> ModifierNoise<'a> {
+        ModifierNoise { source: clone(&self.source), func: self.func }
+    }
+}
+
+impl<'a> NoiseModule for ModifierNoise<'a> {
+    #[inline]
+    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+        match self.source.generate_2d(v) {
+            Ok(output) => (*self.func)(v.x, v.y, output),
+            err => err
+        }
+    }
+}
+
+impl<'a> Modifiable for ModifierNoise<'a> {}
