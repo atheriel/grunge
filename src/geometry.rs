@@ -7,7 +7,6 @@
 //! While these types do not produce "coherent" noise per se, they can be very
 //! useful when constructing complex, multi-component noise.
 
-use std::default::Default;
 use cgmath::vector::{Vector2, Vector, EuclideanVector};
 
 use primitives::NoiseModule;
@@ -45,6 +44,7 @@ impl ConstNoise {
 }
 
 impl NoiseModule for ConstNoise {
+	#[allow(unused_variable)]
 	#[inline]
 	fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
 		Ok(self.value)
@@ -164,6 +164,7 @@ impl Clone for FunctionNoise {
 }
 
 impl NoiseModule for FunctionNoise {
+    #[allow(unused_variable)]
     #[inline]
     fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
         Err("Closures require a mutable environment. Use mut_generate_2d().")

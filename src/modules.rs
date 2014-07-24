@@ -21,5 +21,7 @@ pub use geometry::{
 };
 pub use modifiers::{
     ClampedNoise,
-    ScaledBiasedNoise
+    ScaledBiasedNoise,
+    TranslatedNoise,
+    RotatedNoise
 };

@@ -8,7 +8,9 @@
 //! The documentation for [Modifiable](trait.Modifiable.html) provides some more
 //! detail on their use.
 
+use cgmath::angle::rad;
 use cgmath::vector::Vector2;
+use cgmath::rotation::{Rotation, Rotation2, Basis2};
 
 use primitives::NoiseModule;
 
@@ -58,6 +60,15 @@ pub trait Modifiable : NoiseModule {
     /// vector.
     fn translate(&self, translation: Vector2<f32>) -> TranslatedNoise {
         TranslatedNoise { source: self.to_box(), translation: translation }
+    }
+
+    /// Modifies a source noise module by rotating its input by an angle.
+    // Note that the angle is assumed to be in radians.
+    fn rotate(&self, rotation: f32) -> RotatedNoise {
+        RotatedNoise {
+            source: self.to_box(),
+            rotation: Rotation2::from_angle(rad(rotation))
+        }
     }
 }
 
@@ -204,3 +215,40 @@ impl NoiseModule for TranslatedNoise {
 }
 
 impl Modifiable for TranslatedNoise {}
+
+/// Modifies a source noise module by rotating its input by some angle.
+#[experimental]
+pub struct RotatedNoise {
+    /// The source module.
+    pub source: Box<NoiseModule>,
+
+    /// The rotation to apply to input coordinates.
+    rotation: Basis2<f32>,
+}
+
+impl RotatedNoise {
+    /// Creates a new RotatedNoise with the given source and rotation.
+    pub fn new(source: &NoiseModule, rotation: f32)
+        -> RotatedNoise {
+        RotatedNoise {
+            source: source.to_box(),
+            rotation: Rotation2::from_angle(rad(rotation))
+        }
+    }
+}
+
+impl Clone for RotatedNoise {
+    fn clone(&self) -> RotatedNoise {
+        RotatedNoise {
+            source: clone(&self.source), rotation: self.rotation.clone()
+        }
+    }
+}
+
+impl NoiseModule for RotatedNoise {
+    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+        self.source.generate_2d(self.rotation.rotate_vector(&v))
+    }
+}
+
+impl Modifiable for RotatedNoise {}
