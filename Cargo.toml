@@ -8,3 +8,6 @@ name = "grunge"
 
 [dependencies.cgmath]
 git = "https://github.com/bjz/cgmath-rs.git"
+
+[dependencies.image]
+git = "https://github.com/PistonDevelopers/rust-image.git"

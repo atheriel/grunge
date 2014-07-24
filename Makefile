@@ -82,10 +82,6 @@ example1: lib
 	@$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(EXAMPLE_DIR) -O examples/example1.rs
 	@echo "--- Running example #1:"
 	@$(EXAMPLE_DIR)/example1
-	@cd $(EXAMPLE_DIR)
-	@convert example1.pgm example1.png
-	@rm example1.pgm
-	@echo "--- PNG file created at example1.png."
 
 example2: lib
 	@echo "--- Building example #2."
@@ -93,7 +89,3 @@ example2: lib
 	@$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(EXAMPLE_DIR) -O examples/example2.rs
 	@echo "--- Running example #2:"
 	@$(EXAMPLE_DIR)/example2
-	@cd $(EXAMPLE_DIR)
-	@convert example2.pgm example2.png
-	@rm example2.pgm
-	@echo "--- PNG file created at example2.png."
