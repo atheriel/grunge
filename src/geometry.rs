@@ -116,7 +116,7 @@ impl Modifiable for CylinderNoise {}
 pub type SphereNoise = CylinderNoise;
 
 /// Functions applicable for passing to FunctionNoise.
-pub type FunctionNoiseFunction = fn(x: f32, y: f32) -> Result<f32, &str>;
+pub type FunctionNoiseFunction = fn<'a>(x: f32, y: f32) -> Result<f32, &'a str>;
 
 /// FunctionNoise allows the use of an arbitrary function to generate noise.
 ///

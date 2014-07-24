@@ -254,7 +254,7 @@ impl NoiseModule for RotatedNoise {
 impl Modifiable for RotatedNoise {}
 
 /// Functions applicable for passing to ModifierNoise.
-pub type ModifierNoiseFunction = fn(x: f32, y: f32, out: f32) -> Result<f32, &str>;
+pub type ModifierNoiseFunction = fn<'a>(x: f32, y: f32, out: f32) -> Result<f32, &'a str>;
 
 /// ModifierNoise allows the use of an arbitrary function to modify noise.
 #[experimental]
