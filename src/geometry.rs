@@ -120,9 +120,6 @@ pub type FunctionNoiseFunction = fn(x: f32, y: f32) -> Result<f32, &str>;
 
 /// FunctionNoise allows the use of an arbitrary function to generate noise.
 ///
-/// Note that you must call it using `mut_generate_*` instead of the usual
-/// `generate_*` methods, due to the nature of Rust's closures.
-///
 /// ## Example
 ///
 /// Implementing a "Gaussian" (Multivariate Normal) Noise generator.
@@ -138,40 +135,33 @@ pub type FunctionNoiseFunction = fn(x: f32, y: f32) -> Result<f32, &str>;
 /// }
 ///
 /// fn main() {
-///     // FunctionNoise objects must be mutable
-///     let mut gauss = FunctionNoise::new(gaussian);
-///     println!("{}", gauss.mut_generate_2d(Vector2::new(1.0, 1.0)));
+///     let gauss = FunctionNoise::new(&gaussian);
+///     println!("{}", gauss.generate_2d(Vector2::new(1.0, 1.0)));
 /// }
 /// ```
 #[experimental]
-pub struct FunctionNoise {
+pub struct FunctionNoise<'a> {
     /// The function which maps points to a noise value.
-    pub func: FunctionNoiseFunction
+    pub func: &'a FunctionNoiseFunction
 }
 
-impl FunctionNoise {
+impl<'a> FunctionNoise<'a> {
     /// Create a new FunctionNoise with the given function.
     #[inline]
-    pub fn new(func: FunctionNoiseFunction)
-        -> FunctionNoise { FunctionNoise { func: func } }
+    pub fn new(func: &'a FunctionNoiseFunction)
+        -> FunctionNoise<'a> { FunctionNoise { func: func } }
 
 }
 
-impl Clone for FunctionNoise {
-	fn clone(&self) -> FunctionNoise {
-		fail!("Cannot clone FunctionNoise.")
+impl<'a> Clone for FunctionNoise<'a> {
+	fn clone(&self) -> FunctionNoise<'a> {
+		FunctionNoise { func: self.func }
 	}
 }
 
-impl NoiseModule for FunctionNoise {
-    #[allow(unused_variable)]
+impl<'a> NoiseModule for FunctionNoise<'a> {
     #[inline]
     fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-        Err("Closures require a mutable environment. Use mut_generate_2d().")
-    }
-
-    #[inline]
-    fn mut_generate_2d(&mut self, v: Vector2<f32>) -> Result<f32, &str> {
-        (self.func)(v.x, v.y)
+        (*self.func)(v.x, v.y)
     }
 }

@@ -21,14 +21,6 @@ pub trait NoiseModule: Clone {
 	/// contain an appropriate error message.
 	fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str>;
 
-	/// Generates a noise value for the given coordinates. This method should
-	/// only be usefule when a mutable version of self is required (i.e. when
-	/// using closures).
-	#[experimental]
-	fn mut_generate_2d(&mut self, v: Vector2<f32>) -> Result<f32, &str> {
-		self.generate_2d(v)
-	}
-
 	#[experimental]
 	fn to_box(&self) -> Box<NoiseModule> {
 		box self.clone() as Box<NoiseModule>
