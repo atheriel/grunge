@@ -2,9 +2,8 @@ env:
   global:
     - secure: oFsC77WVP3ggPSSvW9ViS5gtperGGHtIs38MsBw79kIbIj3miamLVz8aR1gmSnHZu1oMf6LWG2N9O9WYYCJUGGn/G3C+SJ6MORVYLjm4cYspZBCaDrkHPcW37y8cBiDM1Ueyc7qOj25XMjwO2fTO2ujXPavOOlQCJSTbPtimrNg=
 install:
-  - curl http://static.rust-lang.org/cargo-dist/cargo-nightly-linux.tar.gz |
-    sudo tar --strip-components 1 -C /usr -xzf -
-  - curl http://www.rust-lang.org/rustup.sh | sudo sh -
+  - wget http://www.rust-lang.org/rustup.sh
+  - sudo sh ./rustup.sh
   - export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
   - rustc -v
 script:
