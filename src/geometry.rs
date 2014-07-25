@@ -130,7 +130,7 @@ pub type FunctionNoiseFunction = fn<'a>(x: f32, y: f32) -> Result<f32, &'a str>;
 /// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, FunctionNoise};
 ///
-/// fn gaussian(x: f32, y: f32) -> Result<f32, &str> {
+/// fn gaussian<'a>(x: f32, y: f32) -> Result<f32, &'a str> {
 ///     Ok(1.0 / (2.0 * Float::pi()) * (- 0.5 * (x.powi(2) + y.powi(2))).exp())
 /// }
 ///
