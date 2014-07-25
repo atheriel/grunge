@@ -13,6 +13,8 @@
 //! better performance as a result. Hopefully, it will one day contain more
 //! features as well.
 //!
+//! The latest source can be found on [GitHub](https://github.com/atheriel/grunge).
+//!
 //! ## Current Design & Features
 //!
 //! All currently implemented noise generators are re-exported in the [modules]
