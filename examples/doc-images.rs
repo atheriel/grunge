@@ -39,10 +39,8 @@ fn create_png(noise: &Modifiable, filename: &'static str) {
 }
 
 fn main() {
-    let pink = PinkNoise { seed: 0u, frequency: 0.025, .. Default::default() };
-    let billow = BillowNoise {
-        seed: 0u, frequency: 0.01, offset: 0.2, .. Default::default()
-    };
+    let pink = PinkNoise { seed: 1u, frequency: 0.025, .. Default::default() };
+    let billow = BillowNoise { seed: 1u, frequency: 0.01, .. Default::default() };
 
     create_png(&pink, "pink.png");
     create_png(&billow, "billow.png");

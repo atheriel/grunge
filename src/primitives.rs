@@ -100,9 +100,12 @@ pub fn snoise_2d(v: Vector2<f32>, seed: uint) -> f32 {
     // If you expect to have large values for the input point, it may be a
     // good idea to mark i0 as mutable and take $i_0 = i_0 \% 289$:
     // i0 = Vector2::new(i0.x % 289, i0.y % 289);
+    let fseed = seed as f32;
 
-    let p = (Vector3::new(i0.y, i0.y + i1.y, i0.y + 1.0).permutation_hash() +
-            Vector3::new(i0.x, i0.x + i1.x, i0.x + 1.0)).permutation_hash();
+    let p = ((Vector3::new(i0.y, i0.y + i1.y, i0.y + 1.0).permutation_hash()
+            + Vector3::new(i0.x, i0.x + i1.x, i0.x + 1.0)).permutation_hash()
+            + Vector3::new(fseed, fseed, fseed))
+            .permutation_hash();
     let h1 = Vector3::new(
         2.0 * (p.x * 0.024390243902439).fract() - 1.0,
         2.0 * (p.y * 0.024390243902439).fract() - 1.0,
