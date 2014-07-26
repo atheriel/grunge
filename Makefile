@@ -62,26 +62,29 @@ bench: test
 
 # Documentation
 
-doc:
+doc: samples
 	@echo "--- Generating documentation."
 	@mkdir -p $(DOC_DIR)
 	@$(RUSTDOC) $(DOC_PARAMS) -o $(DOC_DIR) $(LIB_FILE)
 
-doctest:
+samples: lib
+	@echo "--- Generating documentation example images."
+	@mkdir -p $(EXAMPLE_DIR)
+	@mkdir -p $(DOC_DIR)/static
+	@$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(EXAMPLE_DIR) -O examples/doc-images.rs
+	@$(EXAMPLE_DIR)/doc-images
+	@echo "Moving example images to $(DOC_DIR)/static/."
+	@mv pink.png $(DOC_DIR)/static/pink.png
+	@mv billow.png $(DOC_DIR)/static/billow.png
+
+doctest: lib
 	@echo "--- Running documentation examples:"
 	@mkdir -p $(DOC_DIR)
 	@$(RUSTDOC) $(DOC_PARAMS) $(DOC_TEST_PARAMS) -o $(DOC_DIR) $(LIB_FILE)
 
 # Examples
 
-examples: example1 example2
-
-example1: lib
-	@echo "--- Building example #1."
-	@mkdir -p $(EXAMPLE_DIR)
-	@$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(EXAMPLE_DIR) -O examples/example1.rs
-	@echo "--- Running example #1:"
-	@$(EXAMPLE_DIR)/example1
+examples: example2
 
 example2: lib
 	@echo "--- Building example #2."
