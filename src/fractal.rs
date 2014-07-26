@@ -17,8 +17,27 @@
 //!
 //! From left to right: [PinkNoise](./struct.PinkNoise.html), [BillowNoise]
 //! (./struct.PinkNoise.html).
+//!
+//! Fractal noise types implement the standard library's `Default` and `Rand`
+//! traits to ease in their creation. The former will fill in the fields with
+//! sensible defaults and a seed of zero, while the latter will randomize *only*
+//! the seed value. The following is a common way to set specific or random
+//! seed values:
+//!
+//! ```rust
+//! use std::default::Default;
+//! use std::rand::{Rand, task_rng};
+//!
+//! use grunge::fractal::{PinkNoise, BillowNoise};
+//!
+//! let mut rng = task_rng();
+//!
+//! let pink = PinkNoise { seed: 1035, octaves: 4, .. Default::default() };
+//! let billow: BillowNoise = Rand::rand(&mut rng);
+//! ```
 
 use std::default::Default;
+use std::rand::{Rand, Rng};
 use cgmath::vector::Vector2;
 
 use primitives::{snoise_2d, NoiseModule};
@@ -78,6 +97,12 @@ impl Default for PinkNoise {
             seed: 0, frequency: 1.0, persistence: 0.5,
             lacunarity: 2.0, octaves: 6
         }
+    }
+}
+
+impl Rand for PinkNoise {
+    fn rand<R: Rng>(rng: &mut R) -> PinkNoise {
+        PinkNoise { seed: rng.gen(), .. Default::default() }
     }
 }
 
@@ -153,6 +178,12 @@ impl Default for BillowNoise {
             seed: 0, frequency: 1.0, persistence: 0.5,
             lacunarity: 2.0, offset: 0.2, octaves: 6
         }
+    }
+}
+
+impl Rand for BillowNoise {
+    fn rand<R: Rng>(rng: &mut R) -> BillowNoise {
+        BillowNoise { seed: rng.gen(), .. Default::default() }
     }
 }
 
