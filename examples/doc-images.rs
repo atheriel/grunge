@@ -10,7 +10,13 @@ use std::io::File;
 use image::GenericImage;
 
 use grunge::vectors::Vector2;
-use grunge::modules::{NoiseModule, Modifiable, PinkNoise, BillowNoise};
+use grunge::modules::{
+    NoiseModule,
+    Modifiable,
+    PinkNoise,
+    BillowNoise,
+    RidgedMultifractalNoise
+};
 
 fn create_png(noise: &Modifiable, filename: &'static str) {
     // Scale noise (which has the range [-1, 1]) to the range [0, 1]
@@ -39,9 +45,11 @@ fn create_png(noise: &Modifiable, filename: &'static str) {
 }
 
 fn main() {
-    let pink = PinkNoise { seed: 1u, frequency: 0.025, .. Default::default() };
+    let pink = PinkNoise { seed: 1u, frequency: 0.01, .. Default::default() };
     let billow = BillowNoise { seed: 1u, frequency: 0.01, .. Default::default() };
+    let ridged = RidgedMultifractalNoise { seed: 1u, frequency: 0.01, .. Default::default() };
 
     create_png(&pink, "pink.png");
     create_png(&billow, "billow.png");
+    create_png(&ridged, "ridged.png");
 }

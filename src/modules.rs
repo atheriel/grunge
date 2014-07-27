@@ -10,7 +10,8 @@ pub use primitives::NoiseModule;
 pub use modifiers::Modifiable;
 pub use fractal::{
     PinkNoise,
-    BillowNoise
+    BillowNoise,
+    RidgedMultifractalNoise
 };
 pub use geometry::{
     ConstNoise,

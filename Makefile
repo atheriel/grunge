@@ -70,12 +70,13 @@ doc: samples
 samples: lib
 	@echo "--- Generating documentation example images."
 	@mkdir -p $(EXAMPLE_DIR)
-	@mkdir -p $(DOC_DIR)/static
+	@mkdir -p $(DOC_DIR)/grunge/static
 	@$(RUSTC) -L $(LIB_DIR) -L $(DEPS_DIR) --out-dir=$(EXAMPLE_DIR) -O examples/doc-images.rs
 	@$(EXAMPLE_DIR)/doc-images
 	@echo "Moving example images to $(DOC_DIR)/static/."
-	@mv pink.png $(DOC_DIR)/static/pink.png
-	@mv billow.png $(DOC_DIR)/static/billow.png
+	@mv pink.png $(DOC_DIR)/grunge/static/pink.png
+	@mv billow.png $(DOC_DIR)/grunge/static/billow.png
+	@mv ridged.png $(DOC_DIR)/grunge/static/ridged.png
 
 doctest: lib
 	@echo "--- Running documentation examples:"
