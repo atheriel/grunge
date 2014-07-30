@@ -35,12 +35,11 @@ impl Clone for Box<NoiseModule> {
 /// ```rust
 /// extern crate grunge;
 ///
-/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, Modifiable, PinkNoise};
 ///
 /// fn main() {
 ///     let noise = PinkNoise::new(37).scalebias(0.5, 0.5).clamp(0.0, 1.0);
-///     println!("{}", noise.generate_2d(Vector2::new(1.0, -1.0)));
+///     println!("{}", noise.generate_2d(1.0, -1.0));
 /// }
 /// ```
 pub trait Modifiable : NoiseModule {
@@ -86,7 +85,6 @@ pub trait Modifiable : NoiseModule {
 /// ```rust
 /// extern crate grunge;
 ///
-/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, Modifiable, PinkNoise, ClampedNoise};
 ///
 /// fn main() {
@@ -96,8 +94,8 @@ pub trait Modifiable : NoiseModule {
 ///         source: source.to_box(), min: -0.5, max: 0.5
 ///     };
 ///     let final_clamp = source.clamp(-0.5, 0.5);
-///     assert_eq!(other_clamp.generate_2d(Vector2::new(1.0, -1.0)),
-///                final_clamp.generate_2d(Vector2::new(1.0, -1.0)));
+///     assert_eq!(other_clamp.generate_2d(1.0, -1.0),
+///                final_clamp.generate_2d(1.0, -1.0));
 /// }
 /// ```
 pub struct ClampedNoise {
@@ -129,8 +127,8 @@ impl Clone for ClampedNoise {
 }
 
 impl NoiseModule for ClampedNoise {
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-        match self.source.generate_2d(v) {
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
+        match self.source.generate_2d(x, y) {
             Ok(val) => if val > self.max { Ok(self.max) }
                        else if val < self.min { Ok(self.min) }
                        else { Ok(val) },
@@ -172,8 +170,8 @@ impl Clone for ScaledBiasedNoise {
 }
 
 impl NoiseModule for ScaledBiasedNoise {
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-        match self.source.generate_2d(v) {
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
+        match self.source.generate_2d(x, y) {
             Ok(val) => Ok(val * self.scale + self.bias),
             err => err
         }
@@ -209,8 +207,8 @@ impl Clone for TranslatedNoise {
 }
 
 impl NoiseModule for TranslatedNoise {
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-        self.source.generate_2d(v + self.translation)
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
+        self.source.generate_2d(x + self.translation.x, y + self.translation.y)
     }
 }
 
@@ -246,8 +244,10 @@ impl Clone for RotatedNoise {
 }
 
 impl NoiseModule for RotatedNoise {
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-        self.source.generate_2d(self.rotation.rotate_vector(&v))
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
+        let v = Vector2::new(x, y);
+        let n = self.rotation.rotate_vector(&v);
+        self.source.generate_2d(n.x, n.y)
     }
 }
 
@@ -283,9 +283,9 @@ impl<'a> Clone for ModifierNoise<'a> {
 
 impl<'a> NoiseModule for ModifierNoise<'a> {
     #[inline]
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-        match self.source.generate_2d(v) {
-            Ok(output) => (*self.func)(v.x, v.y, output),
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
+        match self.source.generate_2d(x, y) {
+            Ok(output) => (*self.func)(x, y, output),
             err => err
         }
     }

@@ -19,7 +19,7 @@ pub trait NoiseModule: Clone {
     /// Generates a noise value for the given coordinates. It is possible for
     /// this method to fail or be impossible, and in this case the Result will
     /// contain an appropriate error message.
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str>;
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str>;
 
     #[experimental]
     fn to_box(&self) -> Box<NoiseModule> {
@@ -56,7 +56,8 @@ static SKEW_2D: f32 = 0.211324865405187;
 /// 3. Gustavson, Stefan. (2005). [_Simplex Noise Demystified_]
 ///    (http://www.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf).
 ///    Technical Report. Linköping University, Sweden.
-pub fn snoise_2d(v: Vector2<f32>, seed: uint) -> f32 {
+pub fn snoise_2d(x: f32, y: f32, seed: uint) -> f32 {
+    let v = Vector2::new(x, y);
     // First, determine which cell of N! = 2 simplexes we are in, and where
     // in that cell we are.
     //

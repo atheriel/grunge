@@ -19,13 +19,12 @@ use modifiers::Modifiable;
 /// ```rust
 /// extern crate grunge;
 ///
-/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, ConstNoise};
 ///
 /// fn main() {
 ///     let noise = ConstNoise::new(5.0);
-///     assert_eq!(noise.generate_2d(Vector2::new(101.26, -38.9)),
-///                noise.generate_2d(Vector2::new(-26.0, 0.0)));
+///     assert_eq!(noise.generate_2d(101.26, -38.9),
+///                noise.generate_2d(-26.0, 0.0));
 /// }
 /// ```
 #[stable]
@@ -46,7 +45,7 @@ impl ConstNoise {
 impl NoiseModule for ConstNoise {
     #[allow(unused_variable)]
     #[inline]
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
         Ok(self.value)
     }
 }
@@ -60,8 +59,8 @@ pub struct CheckerboardNoise;
 
 impl NoiseModule for CheckerboardNoise {
     #[inline]
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-        if ((v.x as int) & 1 ^ (v.y as int) & 1) != 0
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
+        if ((x as int) & 1 ^ (y as int) & 1) != 0
             { Ok(-1.0) } else { Ok(1.0) }
     }
 }
@@ -78,14 +77,13 @@ impl Modifiable for CheckerboardNoise {}
 /// ```rust
 /// extern crate grunge;
 ///
-/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, CylinderNoise};
 ///
 /// fn main() {
 ///     let noise1 = CylinderNoise::new(1.0);
 ///     let noise5 = CylinderNoise::new(5.0);
-///     assert_eq!(noise1.generate_2d(Vector2::new(1.0, 0.0)),
-///                noise5.generate_2d(Vector2::new(-5.0, 0.0)));
+///     assert_eq!(noise1.generate_2d(1.0, 0.0),
+///                noise5.generate_2d(-5.0, 0.0));
 /// }
 /// ```
 #[deriving(Clone, PartialEq)]
@@ -104,7 +102,8 @@ impl CylinderNoise {
 
 impl NoiseModule for CylinderNoise {
     #[inline]
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
+        let v = Vector2::new(x, y);
         let fract = v.mul_s(self.frequency).length().fract();
         Ok(1.0 - fract.min(1.0 - fract) * 4.0)
     }
@@ -127,7 +126,6 @@ pub type FunctionNoiseFunction = fn<'a>(x: f32, y: f32) -> Result<f32, &'a str>;
 /// ```rust
 /// extern crate grunge;
 ///
-/// use grunge::vectors::Vector2;
 /// use grunge::modules::{NoiseModule, FunctionNoise};
 ///
 /// fn gaussian<'a>(x: f32, y: f32) -> Result<f32, &'a str> {
@@ -135,8 +133,9 @@ pub type FunctionNoiseFunction = fn<'a>(x: f32, y: f32) -> Result<f32, &'a str>;
 /// }
 ///
 /// fn main() {
-///     let gauss = FunctionNoise::new(&gaussian);
-///     println!("{}", gauss.generate_2d(Vector2::new(1.0, 1.0)));
+///     let func = gaussian;
+///     let gauss = FunctionNoise::new(&func);
+///     println!("{}", gauss.generate_2d(1.0, 1.0));
 /// }
 /// ```
 #[experimental]
@@ -161,7 +160,7 @@ impl<'a> Clone for FunctionNoise<'a> {
 
 impl<'a> NoiseModule for FunctionNoise<'a> {
     #[inline]
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
-        (*self.func)(v.x, v.y)
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
+        (*self.func)(x, y)
     }
 }

@@ -42,7 +42,6 @@
 
 use std::default::Default;
 use std::rand::{Rand, Rng};
-use cgmath::vector::{Vector, Vector2};
 
 use primitives::{snoise_2d, NoiseModule};
 use modifiers::Modifiable;
@@ -112,7 +111,7 @@ impl Rand for PinkNoise {
 }
 
 impl NoiseModule for PinkNoise {
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
         if self.octaves <= 1 {
             return Err("The number of octaves must be two or greater.");
         } else if self.octaves > 30 {
@@ -120,16 +119,14 @@ impl NoiseModule for PinkNoise {
         }
 
         let mut result: f32 = 0.0;
-        let mut sample = Vector2 {
-            x: v.x * self.frequency, y: v.y * self.frequency
-        };
+        let mut sample_x = self.frequency * x;
+        let mut sample_y = self.frequency * y;
         let mut persistence = 1.0;
 
         for octave in range(0, self.octaves) {
-            result += persistence * snoise_2d(sample, self.seed + octave);
-            sample = Vector2 {
-                x: sample.x * self.lacunarity, y: sample.y * self.lacunarity
-            };
+            result += persistence * snoise_2d(sample_x, sample_y, self.seed + octave);
+            sample_x *= self.lacunarity;
+            sample_y *= self.lacunarity;
             persistence *= self.persistence;
         }
 
@@ -193,7 +190,7 @@ impl Rand for BillowNoise {
 }
 
 impl NoiseModule for BillowNoise {
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
         if self.octaves <= 1 {
             return Err("The number of octaves must be two or greater.");
         } else if self.octaves > 30 {
@@ -201,17 +198,15 @@ impl NoiseModule for BillowNoise {
         }
 
         let mut result: f32 = 0.0;
-        let mut sample = Vector2 {
-            x: v.x * self.frequency, y: v.y * self.frequency
-        };
+        let mut sample_x = self.frequency * x;
+        let mut sample_y = self.frequency * y;
         let mut persistence = 1.0;
 
         for octave in range(0, self.octaves) {
             result += persistence *
-                (snoise_2d(sample, self.seed + octave) + self.offset).abs();
-            sample = Vector2 {
-                x: sample.x * self.lacunarity, y: sample.y * self.lacunarity
-            };
+                (snoise_2d(sample_x, sample_y, self.seed + octave) + self.offset).abs();
+            sample_x *= self.lacunarity;
+            sample_y *= self.lacunarity;
             persistence *= self.persistence;
         }
 
@@ -286,27 +281,29 @@ impl Rand for RidgedMultifractalNoise {
 }
 
 impl NoiseModule for RidgedMultifractalNoise {
-    fn generate_2d(&self, v: Vector2<f32>) -> Result<f32, &str> {
+    fn generate_2d(&self, x: f32, y: f32) -> Result<f32, &str> {
         if self.octaves <= 1 {
             return Err("The number of octaves must be two or greater.");
         } else if self.octaves > 30 {
             return Err("The number of octaves must be less than 30.");
         }
 
-        let mut sample = v.mul_s(self.frequency);
+        let mut sample_x = self.frequency * x;
+        let mut sample_y = self.frequency * y;
 
         // Start with the default noise and weight values
         let mut result: f32 = 0.0;
         let mut weight = 1.0;
 
         for octave in range(0, self.octaves) {
-            let mut signal = self.offset - RMULTINOISE_SCALE * snoise_2d(sample, self.seed + octave).abs();
+            let mut signal = self.offset - RMULTINOISE_SCALE * snoise_2d(sample_x, sample_y, self.seed + octave).abs();
             signal *= signal * weight;
 
             result += signal * self.lacunarity.powf(octave as f32).powf(self.power);
 
             // Shift sample
-            sample = sample.mul_s(self.lacunarity);
+            sample_x *= self.lacunarity;
+            sample_y *= self.lacunarity;
 
             // Set weights for the next iteration
             weight = signal * self.gain;

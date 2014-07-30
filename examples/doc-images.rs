@@ -9,7 +9,6 @@ use std::default::Default;
 use std::io::File;
 use image::GenericImage;
 
-use grunge::vectors::Vector2;
 use grunge::modules::{
     NoiseModule,
     Modifiable,
@@ -28,8 +27,7 @@ fn create_png(noise: &Modifiable, filename: &'static str) {
     // Write a block of 200x200 pixels to the buffer
     for y in range(0, 200u32) {
         for x in range(0, 200u32) {
-            let point = Vector2::new(x as f32, y as f32);
-            let value = final.generate_2d(point).unwrap() * 255.0;
+            let value = final.generate_2d(x as f32, y as f32).unwrap() * 255.0;
             imbuf.put_pixel(x, y, image::Luma(value as u8));
         }
     }
