@@ -33,14 +33,10 @@ impl Clone for Box<NoiseModule> {
 /// change the range of PinkNoise from [-1, 1] to [0, 1]:
 ///
 /// ```rust
-/// extern crate grunge;
-///
 /// use grunge::modules::{NoiseModule, Modifiable, PinkNoise};
 ///
-/// fn main() {
-///     let noise = PinkNoise::new(37).scalebias(0.5, 0.5).clamp(0.0, 1.0);
-///     println!("{}", noise.generate_2d(1.0, -1.0));
-/// }
+/// let noise = PinkNoise::new(37).scalebias(0.5, 0.5).clamp(0.0, 1.0);
+/// println!("{}", noise.generate_2d(1.0, -1.0));
 /// ```
 pub trait Modifiable : NoiseModule {
     /// Modifies a source noise module by bounding its output between a `min`
@@ -83,20 +79,16 @@ pub trait Modifiable : NoiseModule {
 /// a boxed representation using NoiseModule's `to_box()` method.
 ///
 /// ```rust
-/// extern crate grunge;
-///
 /// use grunge::modules::{NoiseModule, Modifiable, PinkNoise, ClampedNoise};
 ///
-/// fn main() {
-///     let source = PinkNoise::new(26);
-///     let first_clamp = ClampedNoise::new(&source);
-///     let other_clamp = ClampedNoise {
-///         source: source.to_box(), min: -0.5, max: 0.5
-///     };
-///     let final_clamp = source.clamp(-0.5, 0.5);
-///     assert_eq!(other_clamp.generate_2d(1.0, -1.0),
-///                final_clamp.generate_2d(1.0, -1.0));
-/// }
+/// let source = PinkNoise::new(26);
+/// let first_clamp = ClampedNoise::new(&source);
+/// let other_clamp = ClampedNoise {
+///     source: source.to_box(), min: -0.5, max: 0.5
+/// };
+/// let final_clamp = source.clamp(-0.5, 0.5);
+/// assert_eq!(other_clamp.generate_2d(1.0, -1.0),
+///            final_clamp.generate_2d(1.0, -1.0));
 /// ```
 pub struct ClampedNoise {
     /// The source module.

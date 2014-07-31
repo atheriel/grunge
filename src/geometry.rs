@@ -17,15 +17,11 @@ use modifiers::Modifiable;
 /// ## Example
 ///
 /// ```rust
-/// extern crate grunge;
-///
 /// use grunge::modules::{NoiseModule, ConstNoise};
 ///
-/// fn main() {
-///     let noise = ConstNoise::new(5.0);
-///     assert_eq!(noise.generate_2d(101.26, -38.9),
-///                noise.generate_2d(-26.0, 0.0));
-/// }
+/// let noise = ConstNoise::new(5.0);
+/// assert_eq!(noise.generate_2d(101.26, -38.9),
+///            noise.generate_2d(-26.0, 0.0));
 /// ```
 #[stable]
 #[deriving(Clone, PartialEq)]
@@ -75,16 +71,12 @@ impl Modifiable for CheckerboardNoise {}
 /// Demonstration of changing the frequency of the cylinders.
 ///
 /// ```rust
-/// extern crate grunge;
-///
 /// use grunge::modules::{NoiseModule, CylinderNoise};
 ///
-/// fn main() {
-///     let noise1 = CylinderNoise::new(1.0);
-///     let noise5 = CylinderNoise::new(5.0);
-///     assert_eq!(noise1.generate_2d(1.0, 0.0),
-///                noise5.generate_2d(-5.0, 0.0));
-/// }
+/// let noise1 = CylinderNoise::new(1.0);
+/// let noise5 = CylinderNoise::new(5.0);
+/// assert_eq!(noise1.generate_2d(1.0, 0.0),
+///            noise5.generate_2d(-5.0, 0.0));
 /// ```
 #[deriving(Clone, PartialEq)]
 pub struct CylinderNoise {
@@ -124,19 +116,15 @@ pub type FunctionNoiseFunction = fn<'a>(x: f32, y: f32) -> Result<f32, &'a str>;
 /// Implementing a "Gaussian" (Multivariate Normal) Noise generator.
 ///
 /// ```rust
-/// extern crate grunge;
-///
 /// use grunge::modules::{NoiseModule, FunctionNoise};
 ///
 /// fn gaussian<'a>(x: f32, y: f32) -> Result<f32, &'a str> {
 ///     Ok(1.0 / (2.0 * Float::pi()) * (- 0.5 * (x.powi(2) + y.powi(2))).exp())
 /// }
 ///
-/// fn main() {
-///     let func = gaussian;
-///     let gauss = FunctionNoise::new(&func);
-///     println!("{}", gauss.generate_2d(1.0, 1.0));
-/// }
+/// let func = gaussian;
+/// let gauss = FunctionNoise::new(&func);
+/// println!("{}", gauss.generate_2d(1.0, 1.0));
 /// ```
 #[experimental]
 pub struct FunctionNoise<'a> {
